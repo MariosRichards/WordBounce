@@ -19,7 +19,8 @@ this.read = function()
 this.updateWordPositions = function(words, gridWidth, gridHeight)
 	{
 
-	var rateOfMovement = 1000;
+	var rateOfMovement = 4000;
+	var wallRepulsionFactor = .5;
 
 	var newPositions = []; // list into which we will dump {newX, newy} in the same order
 	var vX, vY;
@@ -34,11 +35,11 @@ this.updateWordPositions = function(words, gridWidth, gridHeight)
 		vY = 0;
 		// wall effects	
 		// force pushing from horizonal walls
-		// vX += 1/(words[word].x + 1);
-		// vX += 1/(words[word].x - gridWidth + 1);	
+		vX += wallRepulsionFactor/(words[word].x + 1);
+		vX -= wallRepulsionFactor/(gridWidth - words[word].x - words[word].width + 1);	
 		// // force pushing from vertical walls
-		// vY += 1/(words[word].x + 1);
-		// vY += 1/(words[word].x - gridHeight + 1);	
+		vY += wallRepulsionFactor/(words[word].y + 1);
+		vY -= wallRepulsionFactor/( gridHeight - words[word].y - words[word].height + 1);	
 		// find central X and Y coords for word
 		centralX = words[word].x + (words[word].width)/2;
 		centralY = words[word].y + (words[word].height)/2;
@@ -86,10 +87,13 @@ this.play = function()
 	
 	for (var i = 0; i < self.words.length; i++)
 		{
+		
+        self.words[i].x = positions[i].x;
+        self.words[i].y = positions[i].y;		
+		
 		$("#" + self.words[i].name).css({
 			left: positions[i].x,
 			top: positions[i].y,
-			color: "blue",
 		});
 			
 		}
